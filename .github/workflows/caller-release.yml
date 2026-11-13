@@ -1,0 +1,39 @@
+# Release de la librería axaes-template-python-library: build en tag y publicación al registro "pypi" (PLAN.md 2.4 y 2.7).
+# El build de PR nunca publica: caller-ci usa publish: false.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    uses: devsecops-gh-actions/shared-workflows/.github/workflows/ci-python.yml@REPLACE_SHA_SHARED_WORKFLOWS
+    permissions:
+      contents: read
+    with:
+      kind: library
+      run-tests: true
+      publish: true
+
+  publish:
+    name: Publish
+    needs: build
+    # verificar: publish-package.yml usa el entorno prod (required reviewers) y solo publica desde tags v*.
+    # Los secretos SEC_* solo si el registro no admite OIDC (PLAN 2.2).
+    uses: devsecops-gh-actions/shared-workflows/.github/workflows/publish-package.yml@REPLACE_SHA_SHARED_WORKFLOWS
+    # Permisos exigidos por publish-package.yml (job publish).
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      packages: write
+    with:
+      registry: pypi
+      version: ${{ needs.build.outputs.version }}
+      artifact-path: ${{ needs.build.outputs.artifact-path }}
+      dry-run: false
