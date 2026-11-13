@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     name: Build
-    uses: devsecops-gh-actions/shared-workflows/.github/workflows/ci-python.yml@REPLACE_SHA_SHARED_WORKFLOWS
+    uses: devsecops-gh-actions/shared-workflows/.github/workflows/ci-python.yml@1fac042b77217a956a73759e8d090c819560b0ea
     permissions:
       contents: read
     with:
@@ -25,7 +25,7 @@ jobs:
     needs: build
     # verificar: publish-package.yml usa el entorno prod (required reviewers) y solo publica desde tags v*.
     # Los secretos SEC_* solo si el registro no admite OIDC (PLAN 2.2).
-    uses: devsecops-gh-actions/shared-workflows/.github/workflows/publish-package.yml@REPLACE_SHA_SHARED_WORKFLOWS
+    uses: devsecops-gh-actions/shared-workflows/.github/workflows/publish-package.yml@1fac042b77217a956a73759e8d090c819560b0ea
     # Permisos exigidos por publish-package.yml (job publish).
     permissions:
       contents: read
